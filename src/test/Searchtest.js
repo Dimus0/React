@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
-import '../components/css/Search.css'
 
 const Search = () => {
   const [matches, setMatches] = useState([]);
@@ -52,10 +51,10 @@ const Search = () => {
           value={awayTeam}
           onChange={handleTeamBChange}
         />
-      </div>
         <button className="button" onClick={handleViewClick}>
-        Search
+          Search
         </button>
+      </div>
       {matches.length > 0 && (
         <div className="match-list">
           {matches.map((match) => (

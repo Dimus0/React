@@ -11,9 +11,17 @@ function UserProfile() {
   const [homeTeam, setHomeTeam] = useState('');
   const [awayTeam, setAwayTeam] = useState('');
   const [noMatchFound, setNoMatchFound] = useState(false);
+  const [matchDate, setMatchDate] = useState('');
+  const [stadiumMatch, setStadium] = useState(''); 
 
   const fetchMatches = () => {
-    axios.post('http://127.0.0.1:8000/api/search/', { home_team_name: homeTeam, away_team_name: awayTeam })
+    axios.post('http://127.0.0.1:8000/api/search/', { 
+      home_team_name: homeTeam,
+       away_team_name: awayTeam,
+       date: matchDate,
+       stadium: stadiumMatch,
+
+      })
       .then(response => {
         if (response.data.length > 0) {
           setMatches(response.data);
@@ -24,6 +32,10 @@ function UserProfile() {
         }
       })
       .catch(error => console.error(error));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Запобігає оновленню сторінки при відправленні форми
+    fetchMatches();
   };
 
   const handleViewClick = () => {
@@ -37,6 +49,13 @@ function UserProfile() {
   const handleTeamBChange = (e) => {
     setAwayTeam(e.target.value);
   };
+  const handleDateChange = (e) => {
+    setMatchDate(e.target.value);
+  };
+  
+  const handleStadiumChange = (e) => {
+    setStadium(e.target.value);
+  };
 
   return (
     <div className="container">
@@ -47,7 +66,7 @@ function UserProfile() {
         <Link to="/login"></Link>
       )}
 
-      <form className="search-form">
+      <form className="search-form" onSubmit={handleSubmit}>
         <div className="search-fields">
           <input type="text" 
           placeholder="Team 1" 
@@ -62,8 +81,17 @@ function UserProfile() {
           value={awayTeam}
           onChange={handleTeamBChange}
            />
-          <input type="date" />
-          <input type="text" placeholder="Stadium" />
+          <input 
+          type="date"
+          value={matchDate} 
+          onChange={handleDateChange} />
+
+          <input 
+          type="text" 
+          placeholder="Stadium" 
+          value={stadiumMatch} 
+          onChange={handleStadiumChange} 
+          />
         </div>
         <button type="submit" className="search-btn" onClick={handleViewClick}>Search</button>
       </form>
@@ -80,6 +108,8 @@ function UserProfile() {
               </span>
               <br />
               <span>Дата та час: {format(new Date(match.date), 'dd.MM.yyyy HH:mm')}</span>
+              <br />
+              <span>Стадіон: {match.stadium}</span>
             </div>
           ))}
         </div>
